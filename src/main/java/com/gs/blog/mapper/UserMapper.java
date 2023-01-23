@@ -9,4 +9,10 @@ public interface UserMapper {
     String login(UserDTO userDTO);
 
     void register(UserDTO userDTO);
+
+    int idCheck(UserDTO userDTO);
+
+    void updateUser(UserDTO userDTO);
+
+    void deleteUser(UserDTO userDTO);
 }

@@ -12,9 +12,9 @@ import java.nio.charset.Charset;
 @Getter
 public class ResponseMessage {
 
-    private HttpHeaders headers= new HttpHeaders();
+    private HttpHeaders headers = new HttpHeaders();
 
-    Message message = new Message();
+    private Message message = new Message();
 
     public ResponseMessage(){
 

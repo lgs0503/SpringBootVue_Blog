@@ -2,13 +2,17 @@ package com.gs.blog.service;
 
 import com.gs.blog.dto.UserDTO;
 import com.gs.blog.mapper.UserMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
+    private static final String PASSWORD_NULL_CHK = "";
+    private static final int ID_CHECK_FLAG = 0;
+    private static final boolean ID_CHECK_RESULT_OK = true;
+    private static final boolean ID_CHECK_RESULT_FAIL = false;
 
     @Autowired
     private UserMapper userMapper;
@@ -28,7 +32,7 @@ public class UserService {
             loginResult =  passwordEncoder.matches(inputPassword, encodePassword);
 
         } catch (Exception e){
-
+            System.out.println(e.getMessage());
         }
 
         return loginResult;
@@ -38,15 +42,58 @@ public class UserService {
 
         try {
 
-            String notEncodePassword = userDTO.getPassword();
-            String encodePassword = passwordEncoder.encode(notEncodePassword);
-
-            userDTO.setPassword(encodePassword);
+            userPasswordEncoder(userDTO);
 
             userMapper.register(userDTO);
 
         } catch (Exception e){
-
+            System.out.println(e.getMessage());
         }
+    }
+
+    public boolean idCheck(UserDTO userDTO) {
+        boolean idCheckResult = ID_CHECK_RESULT_OK;
+
+        try {
+
+            int idCheck = userMapper.idCheck(userDTO);
+
+            if (idCheck > ID_CHECK_FLAG) idCheckResult = ID_CHECK_RESULT_FAIL;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return idCheckResult;
+    }
+
+    public void updateUser(UserDTO userDTO) {
+        try {
+            userPasswordEncoder(userDTO);
+
+            userMapper.updateUser(userDTO);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deleteUser(UserDTO userDTO) {
+        try {
+            userMapper.deleteUser(userDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void userPasswordEncoder(UserDTO userDTO) {
+
+        String notEncodePassword = userDTO.getPassword() != null ?
+                userDTO.getPassword() : PASSWORD_NULL_CHK;
+
+        if(notEncodePassword.equals(PASSWORD_NULL_CHK)) return;
+
+        String encodePassword = passwordEncoder.encode(notEncodePassword);
+
+        userDTO.setPassword(encodePassword);
     }
 }
