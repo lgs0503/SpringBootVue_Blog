@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -83,6 +86,30 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public List<UserDTO> getUser(UserDTO userDTO) {
+
+        List<UserDTO> result = new ArrayList<UserDTO>();
+
+        try {
+            result = userMapper.getUser(userDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return result;
+    }
+
+    public int getUserCount(UserDTO userDTO) {
+        int result = 0;
+
+        try {
+            result = userMapper.getUserCount(userDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     private void userPasswordEncoder(UserDTO userDTO) {

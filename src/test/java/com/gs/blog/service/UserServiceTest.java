@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +32,6 @@ class UserServiceTest {
         System.out.println("loginResult : " + loginResult);
 
         assertEquals(loginResult, true);
-
     }
 
     @Test
@@ -151,5 +152,18 @@ class UserServiceTest {
         loginUser.setPassword("123123");
 
         userService.login(loginUser);
+    }
+
+    @Test
+    @DisplayName("유저 리스트")
+    void userList() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId("admin123");
+
+        userService.getUser(userDTO);
+
+        int userCount = userService.getUserCount(userDTO);
+
+        System.out.println("userCount:" + userCount);
     }
 }
