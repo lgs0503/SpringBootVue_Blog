@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gs.blog.mapper.PostMapper">
+    <insert id="createPost" parameterType="com.gs.blog.dto.PostDTO">
+        INSERT
+        INTO GS_BG_POST
+        (
+            BOARD_IDX,
+            POST_IDX,
+            TITLE,
+            CONTENT,
+            VIEW_CNT,
+            DELETED,
+            FILE_NO,
+            CREATE_DATE,
+            CREATE_USER,
+            UPDATE_DATE,
+            UPDATE_USER
+        )
+        VALUES
+        (
+            #{boardIdx},
+            (
+                SELECT
+                    NVL(MAX(POST_IDX), 0) + 1
+                FROM GS_BG_POST
+            ),
+            #{title},
+            #{content},
+            #{viewCnt},
+            #{deleted},
+            #{fileNo},
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            #{createUser},
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            #{updateUser}
+        )
+    </insert>
+
+    <select id="getPostList" parameterType="com.gs.blog.dto.PostDTO" resultType="com.gs.blog.dto.PostDTO">
+        SELECT
+            BOARD_IDX,
+            POST_IDX,
+            TITLE,
+            CONTENT,
+            VIEW_CNT,
+            DELETED,
+            FILE_NO,
+            CREATE_DATE,
+            CREATE_USER,
+            UPDATE_DATE,
+            UPDATE_USER
+        FROM GS_BG_POST
+        <where>
+            <if test="title != null and title != ''">
+                AND TITLE LIKE '%' || #{title} || '%'
+            </if>
+            <if test="createUser != null and createUser != ''">
+                AND CREATE_USER = #{createUser}
+            </if>
+        </where>
+    </select>
+
+    <update id="updatePost" parameterType="com.gs.blog.dto.PostDTO">
+        UPDATE GS_BG_POST
+        <set>
+            <if test="boardIdx != null and boardIdx != ''">
+                BOARD_IDX = #{boardIdx},
+            </if>
+            <if test="title != null and title != ''">
+                TITLE = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                CONTENT = #{content},
+            </if>
+            <if test="viewCnt != null and viewCnt != ''">
+                VIEW_CNT = #{viewCnt},
+            </if>
+            <if test="deleted != null and deleted != ''">
+                DELETED = #{deleted},
+            </if>
+            <if test="fileNo != null and fileNo != ''">
+                FILE_NO = #{fileNo},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                UPDATE_USER = #{updateUser},
+            </if>
+            UPDATE_DATE = TO_CHAR(SYSDATE, 'YYYYMMDD')
+        </set>
+        WHERE 1=1
+            <if test="postIdx != null and postIdx != ''">
+                AND POST_IDX = #{postIdx}
+            </if>
+    </update>
+
+    <delete id="deletePost" parameterType="com.gs.blog.dto.PostDTO">
+        DELETE FROM GS_BG_POST
+        <where>
+            <if test="postIdx != null and postIdx != ''">
+                AND POST_IDX = #{postIdx}
+            </if>
+        </where>
+    </delete>
+</mapper>
