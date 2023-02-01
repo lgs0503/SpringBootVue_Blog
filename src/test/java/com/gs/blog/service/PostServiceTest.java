@@ -44,10 +44,13 @@ class PostServiceTest {
 
         PostDTO post = new PostDTO();
 
-        post.setTitle("정다은");
-        post.setCreateUser("searchTest");
+        //post.setTitle("정다은");
+        //post.setCreateUser("searchTest");
 
-        postService.getPostList(post);
+        int currentPage = 3;
+        int rangePage = 15;
+
+        postService.getPostList(post, currentPage, rangePage);
     }
 
     @Test

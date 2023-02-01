@@ -24,12 +24,43 @@ public class PostService {
         }
     }
 
-    public List<PostDTO> getPostList(PostDTO postDTO) {
+    public List<PostDTO> getPostList(PostDTO postDTO, int currentPage, int rangePage) {
 
         List<PostDTO> result = new ArrayList<PostDTO>();
 
         try {
+
+            int startIndex = rangePage * (currentPage - 1);
+            int endIndex = startIndex + rangePage;
+
+            postDTO.setStartIndex(startIndex);
+            postDTO.setEndIndex(endIndex);
+
             result = postMapper.getPostList(postDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public int getPostListCount(PostDTO postDTO) {
+
+        int result = 0;
+
+        try {
+            result = postMapper.getPostListCount(postDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public PostDTO getPost(PostDTO postDTO) {
+
+        PostDTO result = new PostDTO();
+
+        try {
+            result = postMapper.getPost(postDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

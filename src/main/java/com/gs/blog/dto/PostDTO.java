@@ -16,4 +16,7 @@ public class PostDTO extends CommonDTO {
     private int viewCnt;
     private String deleted;
     private int fileNo;
+
+    private int startIndex;
+    private int endIndex;
 }

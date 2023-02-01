@@ -11,6 +11,10 @@ public interface PostMapper {
 
     List<PostDTO> getPostList(PostDTO postDTO);
 
+    int getPostListCount(PostDTO postDTO);
+
+    PostDTO getPost(PostDTO postDTO);
+
     void updatePost(PostDTO postDTO);
 
     void deletePost(PostDTO postDTO);

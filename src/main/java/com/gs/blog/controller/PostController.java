@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/post")
@@ -28,20 +30,46 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity getPostList(@RequestParam String title, @RequestParam String createUser) {
+    public ResponseEntity getPostList(
+            @RequestParam String title,
+            @RequestParam String createUser,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int rangePage) {
         ResponseMessage responseMessage = new ResponseMessage();
 
         PostDTO postDTO = new PostDTO();
         postDTO.setTitle(title);
         postDTO.setCreateUser(createUser);
 
-        List<PostDTO> postList = postService.getPostList(postDTO);
+        List<PostDTO> postList = postService.getPostList(postDTO, currentPage, rangePage);
+        int postListCount = postService.getPostListCount(postDTO);
 
-        responseMessage.getMessage().setData(postList);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        resultMap.put("list", postList);
+        resultMap.put("count", postListCount);
+
+        responseMessage.getMessage().setData(resultMap);
         responseMessage.getMessage().setMessage("getPostList Success");
 
         return responseMessage.getResponse();
     }
+
+    @GetMapping(value = "/{postIdx}")
+    public ResponseEntity getPost(@PathVariable("postIdx") int postIdx) {
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPostIdx(postIdx);
+
+        PostDTO post = postService.getPost(postDTO);
+
+        responseMessage.getMessage().setData(post);
+        responseMessage.getMessage().setMessage("getPost Success");
+
+        return responseMessage.getResponse();
+    }
+
 
     @PatchMapping
     public ResponseEntity updatePost(@RequestBody PostDTO postDTO) {

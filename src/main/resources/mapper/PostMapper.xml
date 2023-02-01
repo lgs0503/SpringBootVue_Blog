@@ -51,6 +51,37 @@
             CREATE_USER,
             UPDATE_DATE,
             UPDATE_USER
+        FROM
+            (
+                SELECT
+                    BOARD_IDX,
+                    POST_IDX,
+                    TITLE,
+                    CONTENT,
+                    VIEW_CNT,
+                    DELETED,
+                    FILE_NO,
+                    CREATE_DATE,
+                    CREATE_USER,
+                    UPDATE_DATE,
+                    UPDATE_USER,
+                    ROW_NUMBER() OVER (ORDER BY POST_IDX ASC) AS NUM
+                FROM GS_BG_POST
+                <where>
+                    <if test="title != null and title != ''">
+                        AND TITLE LIKE '%' || #{title} || '%'
+                    </if>
+                    <if test="createUser != null and createUser != ''">
+                        AND CREATE_USER = #{createUser}
+                    </if>
+                </where>
+            ) A
+        WHERE NUM > #{startIndex} AND NUM <![CDATA[<=]]> #{endIndex}
+    </select>
+
+    <select id="getPostListCount" parameterType="com.gs.blog.dto.PostDTO" resultType="int">
+        SELECT
+            COUNT(*) COUNT
         FROM GS_BG_POST
         <where>
             <if test="title != null and title != ''">
@@ -60,6 +91,23 @@
                 AND CREATE_USER = #{createUser}
             </if>
         </where>
+    </select>
+
+    <select id="getPost" parameterType="com.gs.blog.dto.PostDTO" resultType="com.gs.blog.dto.PostDTO">
+        SELECT
+            BOARD_IDX,
+            POST_IDX,
+            TITLE,
+            CONTENT,
+            VIEW_CNT,
+            DELETED,
+            FILE_NO,
+            CREATE_DATE,
+            CREATE_USER,
+            UPDATE_DATE,
+            UPDATE_USER
+        FROM GS_BG_POST
+        WHERE POST_IDX = #{postIdx}
     </select>
 
     <update id="updatePost" parameterType="com.gs.blog.dto.PostDTO">
