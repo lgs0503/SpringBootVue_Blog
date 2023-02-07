@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gs.blog.mapper.UserMapper">
+
+    <select id="login" parameterType="com.gs.blog.dto.UserDTO" resultType="String">
+        SELECT
+            PASSWORD
+        FROM    GS_BG_USER
+        WHERE   1=1
+        AND     ID = #{id}
+    </select>
+
+    <insert id="register" parameterType="com.gs.blog.dto.UserDTO">
+        INSERT
+        INTO    GS_BG_USER
+        (
+            IDX,
+            ID,
+            PASSWORD,
+            NAME,
+            NICKNAME,
+            BIRTHDAY,
+            GENDER,
+            EMAIL,
+            ADDRESS,
+            ADDRESS_DETAIL,
+            PHONE_NUM,
+            IMAGE_FILE_NO,
+            CREATE_USER,
+            CREATE_DATE,
+            UPDATE_USER,
+            UPDATE_DATE
+        )
+        VALUES
+        (
+            (
+                SELECT
+                    NVL(MAX(IDX), 0) + 1
+                FROM GS_BG_USER
+            ),
+            #{id},
+            #{password},
+            #{name},
+            #{nickName},
+            #{birthday},
+            #{gender},
+            #{email},
+            #{address},
+            #{addressDetail},
+            #{phoneNum},
+            #{imageFileNo},
+            #{createUser},
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            #{updateUser},
+            TO_CHAR(SYSDATE, 'YYYYMMDD')
+        )
+    </insert>
+
+    <select id="idCheck" parameterType="com.gs.blog.dto.UserDTO" resultType="int">
+        SELECT
+            COUNT(*) CHK
+        FROM    GS_BG_USER
+        WHERE   ID = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="com.gs.blog.dto.UserDTO">
+        UPDATE GS_BG_USER
+        <set>
+            <if test="password != null and password != ''">
+                PASSWORD = #{password},
+            </if>
+            <if test="name != null and name != ''">
+                NAME = #{name},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                NICKNAME = #{nickName},
+            </if>
+            <if test="birthday != null and birthday != ''">
+                BIRTHDAY = #{birthday},
+            </if>
+            <if test="gender != null and gender != ''">
+                GENDER = #{gender},
+            </if>
+            <if test="email != null and email != ''">
+                EMAIL = #{email},
+            </if>
+            <if test="address != null and address != ''">
+                ADDRESS = #{address},
+            </if>
+            <if test="addressDetail != null and addressDetail != ''">
+                ADDRESS_DETAIL = #{addressDetail},
+            </if>
+            <if test="phoneNum != null and phoneNum != ''">
+                PHONE_NUM = #{phoneNum},
+            </if>
+            <if test="imageFileNo != null and imageFileNo != ''">
+                IMAGE_FILE_NO = #{imageFileNo},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                UPDATE_USER = #{updateUser},
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                UPDATE_DATE = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            </if>
+        </set>
+        <where>
+            <if test="idx != null and idx != ''">
+                AND     IDX = #{idx}
+            </if>
+            <if test="id != null and id != ''">
+                AND     ID = #{id}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteUser" parameterType="com.gs.blog.dto.UserDTO">
+        DELETE FROM GS_BG_USER
+        <where>
+            <if test="idx != null and idx != ''">
+                AND IDX = #{idx}
+            </if>
+            <if test="id != null and id != ''">
+                AND ID = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <select id="getUser" parameterType="com.gs.blog.dto.UserDTO" resultType="com.gs.blog.dto.UserDTO">
+        SELECT
+            IDX,
+            ID,
+            PASSWORD,
+            NAME,
+            NICKNAME,
+            BIRTHDAY,
+            GENDER,
+            EMAIL,
+            ADDRESS,
+            ADDRESS_DETAIL,
+            PHONE_NUM,
+            IMAGE_FILE_NO,
+            CREATE_USER,
+            CREATE_DATE,
+            UPDATE_USER,
+            UPDATE_DATE
+        FROM    GS_BG_USER
+        <where>
+            <if test="idx != null and idx != ''">
+                AND IDX = #{idx}
+            </if>
+            <if test="id != null and id != ''">
+                AND ID = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND NAME = #{name}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND NICKNAME = #{nickName}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserCount" parameterType="com.gs.blog.dto.UserDTO" resultType="int">
+        SELECT
+            COUNT(*) COUNT
+        FROM    GS_BG_USER
+        <where>
+            <if test="idx != null and idx != ''">
+                AND IDX = #{idx}
+            </if>
+            <if test="id != null and id != ''">
+                AND ID = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND NAME = #{name}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND NICKNAME = #{nickName}
+            </if>
+        </where>
+    </select>
+</mapper>
