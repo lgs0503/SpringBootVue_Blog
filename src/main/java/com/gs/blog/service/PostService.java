@@ -1,5 +1,6 @@
 package com.gs.blog.service;
 
+import com.gs.blog.common.Paging;
 import com.gs.blog.dto.PostDTO;
 import com.gs.blog.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,10 @@ public class PostService {
 
         try {
 
-            int startIndex = rangePage * (currentPage - 1);
-            int endIndex = startIndex + rangePage;
+            Paging paging = new Paging(currentPage, rangePage);
 
-            postDTO.setStartIndex(startIndex);
-            postDTO.setEndIndex(endIndex);
+            postDTO.setStartIndex(paging.getStartIndex());
+            postDTO.setEndIndex(paging.getEndIndex());
 
             result = postMapper.getPostList(postDTO);
         } catch (Exception e) {
