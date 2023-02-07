@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gs.blog.mapper.FileMapper">
+    <insert id="fileUpload" parameterType="com.gs.blog.dto.FileDTO">
+        INSERT
+        INTO GS_BG_FILE
+        (
+            FILE_NO,
+            FILE_PATH,
+            FILE_NAME,
+            FILE_PHYSICAL_NAME,
+            FILE_EXTEN,
+            FILE_SIZE,
+            USE_YN,
+            CREATE_USER,
+            CREATE_DATE,
+            UPDATE_USER,
+            UPDATE_DATE
+        )
+        VALUES
+        (
+            (
+                SELECT  NVL(MAX(FILE_NO), 0) + 1
+                FROM    GS_BG_FILE
+            ),
+            #{filePath},
+            #{fileName},
+            #{filePhysicalName},
+            #{fileExten},
+            #{fileSize},
+            'Y',
+            #{createUser},
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            #{updateUser},
+            TO_CHAR(SYSDATE, 'YYYYMMDD')
+        )
+    </insert>
+
+    <select id="getFileNo" resultType="int">
+        SELECT  NVL(MAX(FILE_NO), 0) AS FILE_NO
+        FROM    GS_BG_FILE
+    </select>
+</mapper>
